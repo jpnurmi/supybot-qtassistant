@@ -91,7 +91,6 @@ class QtAssistant(callbacks.Plugin):
         result = {'item': None, 'ratio': 0.0}
         for module, index in self.dict.iteritems():
             try:
-                self.log.info(module)
                 matched, key, item, ratio = index._search(query)
                 if matched and ratio > result['ratio']:
                     result['item'] = item
