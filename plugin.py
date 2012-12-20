@@ -35,6 +35,7 @@ import supybot.ircutils as ircutils
 import supybot.callbacks as callbacks
 import supybot.conf as conf
 
+import os
 import glob
 import fuzzydict
 from pysqlite2 import dbapi2 as sqlite3
@@ -46,14 +47,15 @@ class QtAssistant(callbacks.Plugin):
     def __init__(self, irc):
         self.__parent = super(QtAssistant, self)
         self.__parent.__init__(irc)
-        self.dict = fuzzydict.FuzzyDict()
 
+        self.dict = {}
         datadir = conf.supybot.directories.data
         for qchfile in glob.glob(datadir.dirize("*.qch")):
-            self.dict.update(self._index(qchfile))
+            module = os.path.splitext(os.path.basename(qchfile))[0]
+            self.dict[module] = self._index(qchfile)
 
     def _index(self, file):
-        entries = {}
+        entries = fuzzydict.FuzzyDict(cutoff=0.8)
         db = sqlite3.connect(file)
         cursor = db.cursor()
         # IndexTable: Id, Name, Identifier, NamespaceId, FileId, Anchor
@@ -86,12 +88,19 @@ class QtAssistant(callbacks.Plugin):
         if query == None:
             query = 'index.html'
 
-        try:
-            matched, key, item, ratio = self.dict._search(query)
-        except:
-            matched = False
+        result = {'item': None, 'ratio': 0.0}
+        for module, index in self.dict.iteritems():
+            try:
+                self.log.info(module)
+                matched, key, item, ratio = index._search(query)
+                if matched and ratio > result['ratio']:
+                    result['item'] = item
+                    result['ratio'] = ratio
+            except:
+                matched = False
 
-        if not matched:
+        item = result['item']
+        if not item:
             return irc.reply('No matches for: \'%s\'' % query)
 
         url = '%s/%s/%s' % (self.registryValue('url'), item['folder'], item['file'])
