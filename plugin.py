@@ -71,7 +71,7 @@ class QtAssistant(callbacks.Plugin):
             entry['file'] = row[3]
             entry['title'] = row[4]
             entry['folder'] = row[5]
-            dict[entry['name']] = entry
+            # dict[entry['name']] = entry
             dict[entry['id']] = entry
             dict[entry['file']] = entry
         return dict
