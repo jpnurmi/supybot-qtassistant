@@ -59,22 +59,47 @@ class QtAssistant(callbacks.Plugin):
         # IndexTable: Id, Name, Identifier, NamespaceId, FileId, Anchor
         # FileNameTable: FolderId, Name, FileId, Title
         # FolderTable: Id, Name, NamespaceId
-        cursor.execute('SELECT * FROM IndexTable, FileNameTable, FolderTable '
-                       'WHERE IndexTable.FileId = FileNameTable.FileId')
+        cursor.execute('SELECT IndexTable.Name, IndexTable.Identifier, IndexTable.Anchor, FileNameTable.Name, FileNameTable.Title, FolderTable.Name '
+                       'FROM IndexTable, FileNameTable, FolderTable '
+                       'WHERE IndexTable.FileId = FileNameTable.FileId AND FileNameTable.FolderId = FolderTable.Id')
         rows = cursor.fetchall()
         for row in rows:
-            # (200, u'XQuery', u'XQuery', 1, 61, None, 1, u'xmlprocessing.html', 61, u'qtxmlpatterns : XQuery')
-            print(row)
-#            entry = {}
-#            entry['name'] = row[1]
-#            entry['id'] = row[2]
-#            entry['anchor'] = row[5]
-#            entry['file'] = row[7]
-#            entry['title'] = row[9]
-#            dict[entry['name']] = entry
-#            dict[entry['id']] = entry
-#            dict[entry['file']] = entry
+            entry = {}
+            entry['name'] = row[0]
+            entry['id'] = row[1]
+            entry['anchor'] = row[2]
+            entry['file'] = row[3]
+            entry['title'] = row[4]
+            entry['folder'] = row[5]
+            dict[entry['name']] = entry
+            dict[entry['id']] = entry
+            dict[entry['file']] = entry
         return dict
+
+    def rtfm(self, irc, msg, args, query):
+        """ <keyword(s)>
+
+        Searches the Qt documentation for <keyword(s)> and returns the
+        corresponding online documentation URL if matched.
+        """
+
+        if query == None:
+            query = 'index.html'
+
+        try:
+            matched, key, item, ratio = self.dict._search(query)
+        except:
+            matched = False
+
+        if not matched:
+            return irc.reply('No matches for: \'%s\'' % query)
+
+        url = '%s/%s/%s' % (self.registryValue('url'), item['folder'], item['file'])
+        if item['anchor'] != None:
+            url = '%s#%s' % (url, item['anchor'])
+        irc.reply('%s - %s' % (item['title'], url))
+
+    rtfm = wrap(rtfm, [additional('text')])
 
 Class = QtAssistant
 
