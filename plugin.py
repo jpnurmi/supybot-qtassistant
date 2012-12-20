@@ -53,7 +53,7 @@ class QtAssistant(callbacks.Plugin):
             self.dict.update(self._index(qchfile))
 
     def _index(self, file):
-        dict = fuzzydict.FuzzyDict()
+        entries = {}
         db = sqlite3.connect(file)
         cursor = db.cursor()
         # IndexTable: Id, Name, Identifier, NamespaceId, FileId, Anchor
@@ -71,10 +71,10 @@ class QtAssistant(callbacks.Plugin):
             entry['file'] = row[3]
             entry['title'] = row[4]
             entry['folder'] = row[5]
-            # dict[entry['name']] = entry
-            dict[entry['id']] = entry
-            dict[entry['file']] = entry
-        return dict
+            # entries[entry['name']] = entry
+            entries[entry['id']] = entry
+            entries[entry['file']] = entry
+        return entries
 
     def rtfm(self, irc, msg, args, query):
         """ <keyword(s)>
