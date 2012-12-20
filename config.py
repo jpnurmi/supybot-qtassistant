@@ -39,11 +39,9 @@ def configure(advanced):
     from supybot.questions import expect, anything, something, yn
     conf.registerPlugin('QtAssistant', True)
 
-
 QtAssistant = conf.registerPlugin('QtAssistant')
-# This is where your configuration variables (if any) should go.  For example:
-# conf.registerGlobalValue(QtAssistant, 'someConfigVariableName',
-#     registry.Boolean(False, """Help for someConfigVariableName."""))
 
+conf.registerGlobalValue(QtAssistant, 'url',
+    registry.String('http://qt-project.org/doc/qt-5.0', """Base URL of the Qt docs."""))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
