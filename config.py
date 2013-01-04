@@ -41,7 +41,16 @@ def configure(advanced):
 
 QtAssistant = conf.registerPlugin('QtAssistant')
 
-conf.registerGlobalValue(QtAssistant, 'url',
+conf.registerGroup(QtAssistant, 'doc')
+conf.registerGlobalValue(QtAssistant.doc, 'url',
     registry.String('http://qt-project.org/doc/qt-5.0', """Base URL of the Qt docs."""))
+
+conf.registerGroup(QtAssistant, 'src')
+conf.registerGlobalValue(QtAssistant.src, 'url',
+    registry.String('http://qt.gitorious.org/qt', """Base URL of the Qt sources."""))
+conf.registerGlobalValue(QtAssistant.src, 'blobs',
+    registry.String('blobs/v5.0.0', """Path of the Qt source blobs."""))
+conf.registerGlobalValue(QtAssistant.src, 'trees',
+    registry.String('trees/v5.0.0', """Path of the Qt source trees."""))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:

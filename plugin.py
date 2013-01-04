@@ -37,6 +37,7 @@ import supybot.conf as conf
 
 import os
 import glob
+import fnmatch
 import fuzzydict
 from pysqlite2 import dbapi2 as sqlite3
 
@@ -102,12 +103,41 @@ class QtAssistant(callbacks.Plugin):
         if not item:
             return irc.reply('No matches for: \'%s\'' % query)
 
-        url = '%s/%s/%s' % (self.registryValue('url'), item['folder'], item['file'])
+        url = '%s/%s/%s' % (self.registryValue('doc.url'), item['folder'], item['file'])
         if item['anchor'] != None:
             url = '%s#%s' % (url, item['anchor'])
         irc.reply('%s - %s' % (item['title'], url))
 
     rtfm = wrap(rtfm, [additional('text')])
+
+    def src(self, irc, msg, args, query):
+        """ <keyword>
+
+        Searches the Qt sources for <keyword> and returns the
+        corresponding online source URL if matched.
+        """
+
+        url = self.registryValue('src.url')
+        if query == None:
+            return irc.reply(url)
+
+        result = []
+        blobs = self.registryValue('src.blobs')
+        datadir = conf.supybot.directories.data
+        for listfile in glob.glob(datadir.dirize("*.files")):
+            module = os.path.splitext(os.path.basename(listfile))[0]
+            f = open(listfile)
+            for line in f.readlines():
+                line = line.strip()
+                if fnmatch.fnmatch(os.path.basename(line), query):
+                    result.append("%s/%s/%s/%s" % (url, module, blobs, line))
+            f.close()
+
+        if not result:
+            return irc.reply('No matches for: \'%s\'' % query)
+        irc.replies(result)
+
+    src = wrap(src, [additional('text')])
 
 Class = QtAssistant
 
