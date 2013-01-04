@@ -134,7 +134,7 @@ class QtAssistant(callbacks.Plugin):
             f.close()
 
         if not result:
-            return irc.reply('No matches for: \'%s\'' % query)
+            return irc.reply('No such file: \'%s\'' % query)
         irc.replies(result)
 
     src = wrap(src, [additional('text')])
