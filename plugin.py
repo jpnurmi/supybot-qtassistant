@@ -110,18 +110,9 @@ class QtAssistant(callbacks.Plugin):
 
     rtfm = wrap(rtfm, [additional('text')])
 
-    def src(self, irc, msg, args, query):
-        """ <keyword>
-
-        Searches the Qt sources for <keyword> and returns the
-        corresponding online source URL if matched.
-        """
-
-        url = self.registryValue('src.url')
-        if query == None:
-            return irc.reply(url)
-
+    def _locate(self, query):
         result = []
+        url = self.registryValue('src.url')
         blobs = self.registryValue('src.blobs')
         datadir = conf.supybot.directories.data
         for listfile in glob.glob(datadir.dirize("*.files")):
@@ -132,6 +123,21 @@ class QtAssistant(callbacks.Plugin):
                 if fnmatch.fnmatch(os.path.basename(line), query):
                     result.append("%s/%s/%s/%s" % (url, module, blobs, line))
             f.close()
+        return result
+
+    def src(self, irc, msg, args, query):
+        """ <keyword>
+
+        Searches the Qt sources for <keyword> and returns the
+        corresponding online source URL if matched.
+        """
+
+        if query == None:
+            return irc.reply(self.registryValue('src.url'))
+
+        result = self._locate(query)
+        if not result and "." not in query:
+            result = self._locate(query.lower() + ".*")
 
         if not result:
             return irc.reply('No such file: \'%s\'' % query)
