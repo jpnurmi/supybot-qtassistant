@@ -120,7 +120,7 @@ class QtAssistant(callbacks.Plugin):
             f = open(listfile)
             for line in f.readlines():
                 line = line.strip()
-                if fnmatch.fnmatch(os.path.basename(line), query):
+                if fnmatch.fnmatch(os.path.basename(line).lower(), query.lower()):
                     result.append("%s/%s/%s/%s" % (url, module, blobs, line))
             f.close()
         return result
@@ -138,8 +138,6 @@ class QtAssistant(callbacks.Plugin):
         result = self._locate(query)
         if not result and "." not in query:
             result = self._locate(query + ".*")
-            if not result:
-                result = self._locate(query.lower() + ".*")
 
         if not result:
             return irc.reply('No such file: \'%s\'' % query)
