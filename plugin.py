@@ -137,7 +137,9 @@ class QtAssistant(callbacks.Plugin):
 
         result = self._locate(query)
         if not result and "." not in query:
-            result = self._locate(query.lower() + ".*")
+            result = self._locate(query + ".*")
+            if not result:
+                result = self._locate(query.lower() + ".*")
 
         if not result:
             return irc.reply('No such file: \'%s\'' % query)
