@@ -12,8 +12,8 @@ for d in qt*; do
     if [ -d $d/src ]; then
         echo $d
         cd $d
-        ack --ignore-dir=doc --ignore-dir=3rdparty -f --type=cpp src > $outpath/$d.files
-        ctags --fields=Kns --languages=C++ --exclude=3rdparty --exclude=doc --recurse=yes -f $outpath/$d.tags src
+        # ~/.ackrc: --type-set=qml=.qml
+        ack --ignore-dir=doc --ignore-dir=3rdparty -f --type=cpp --type=js --type=qml src > $outpath/$d.files
         cd ..
     fi
 done
