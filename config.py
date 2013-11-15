@@ -43,7 +43,7 @@ QtAssistant = conf.registerPlugin('QtAssistant')
 
 conf.registerGroup(QtAssistant, 'doc')
 conf.registerGlobalValue(QtAssistant.doc, 'url',
-    registry.String('http://qt-project.org/doc/qt-5.0', """Base URL of the Qt docs."""))
+    registry.String('http://qt-project.org/doc/qt-5.1', """Base URL of the Qt docs."""))
 
 conf.registerGroup(QtAssistant, 'src')
 conf.registerGlobalValue(QtAssistant.src, 'url',
