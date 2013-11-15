@@ -113,7 +113,6 @@ class QtAssistant(callbacks.Plugin):
     def _locate(self, query):
         result = []
         url = self.registryValue('src.url')
-        blobs = self.registryValue('src.blobs')
         datadir = conf.supybot.directories.data
         for listfile in glob.glob(datadir.dirize("*.files")):
             module = os.path.splitext(os.path.basename(listfile))[0]
@@ -121,7 +120,7 @@ class QtAssistant(callbacks.Plugin):
             for line in f.readlines():
                 line = line.strip()
                 if fnmatch.fnmatch(os.path.basename(line).lower(), query.lower()):
-                    result.append("%s/%s/%s/%s" % (url, module, blobs, line))
+                    result.append("%s/%s/%s.html" % (url, module, line))
             f.close()
         return result
 

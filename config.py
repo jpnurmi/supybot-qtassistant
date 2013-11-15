@@ -47,10 +47,6 @@ conf.registerGlobalValue(QtAssistant.doc, 'url',
 
 conf.registerGroup(QtAssistant, 'src')
 conf.registerGlobalValue(QtAssistant.src, 'url',
-    registry.String('http://qt.gitorious.org/qt', """Base URL of the Qt sources."""))
-conf.registerGlobalValue(QtAssistant.src, 'blobs',
-    registry.String('blobs/v5.0.0', """Path of the Qt source blobs."""))
-conf.registerGlobalValue(QtAssistant.src, 'trees',
-    registry.String('trees/v5.0.0', """Path of the Qt source trees."""))
+    registry.String('http://code.woboq.org/qt5', """Base URL of the Qt sources."""))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
