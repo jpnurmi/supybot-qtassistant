@@ -103,7 +103,7 @@ class QtAssistant(callbacks.Plugin):
         if not item:
             return irc.reply('No matches for: \'%s\'' % query)
 
-        url = '%s/%s/%s' % (self.registryValue('doc.url'), item['folder'], item['file'])
+        url = '%s/%s' % (self.registryValue('doc.url'), item['file'])
         if item['anchor'] != None:
             url = '%s#%s' % (url, item['anchor'])
         irc.reply('%s - %s' % (item['title'], url))
