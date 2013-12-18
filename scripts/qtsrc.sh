@@ -12,8 +12,10 @@ for d in qt*; do
     if [ -d $d/src ]; then
         echo $d
         cd $d
-        # ~/.ackrc: --type-set=qml=.qml
-        ack --ignore-dir=doc --ignore-dir=3rdparty -f --type=cpp --type=js --type=qml src > $outpath/$d.files
+        # ~/.ackrc:
+        #--type-set=mm=.mm
+        #--type-set=qml=.qml
+        ack --ignore-dir=doc --ignore-dir=3rdparty -f --type=cpp --type=js --type=qml --type=mm src > $outpath/$d.files
         cd ..
     fi
 done
