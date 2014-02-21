@@ -37,6 +37,7 @@ import supybot.conf as conf
 
 import os
 import glob
+import string
 import fnmatch
 import fuzzydict
 from pysqlite2 import dbapi2 as sqlite3
@@ -113,6 +114,7 @@ class QtAssistant(callbacks.Plugin):
     def _locate(self, query):
         result = []
         url = self.registryValue('src.url')
+        rev = self.registryValue('src.revision')
         datadir = conf.supybot.directories.data
         for listfile in glob.glob(datadir.dirize("*.files")):
             module = os.path.splitext(os.path.basename(listfile))[0]
@@ -120,7 +122,7 @@ class QtAssistant(callbacks.Plugin):
             for line in f.readlines():
                 line = line.strip()
                 if fnmatch.fnmatch(os.path.basename(line).lower(), query.lower()):
-                    result.append("%s/%s/%s.html" % (url, module, line))
+                    result.append(string.Template(url).substitute({'revision':rev,'module':module,'path':line}))
             f.close()
         return result
 

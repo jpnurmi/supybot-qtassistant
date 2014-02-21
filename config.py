@@ -47,6 +47,8 @@ conf.registerGlobalValue(QtAssistant.doc, 'url',
 
 conf.registerGroup(QtAssistant, 'src')
 conf.registerGlobalValue(QtAssistant.src, 'url',
-    registry.String('http://code.woboq.org/qt5', """Base URL of the Qt sources."""))
+    registry.String('https://github.com/qtproject/${module}/blob/${revision}/${path}', """The URL of the Qt sources."""))
+conf.registerGlobalValue(QtAssistant.src, 'revision',
+    registry.String('v5.2.1', """The revision of the Qt sources."""))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
