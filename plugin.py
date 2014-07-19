@@ -42,11 +42,6 @@ import fnmatch
 import fuzzydict
 from pysqlite2 import dbapi2 as sqlite3
 
-import bs4
-import urllib2
-import calendar
-import datetime
-
 class QtAssistant(callbacks.Plugin):
     """Add the help for "@plugin help QtAssistant" here
     This should describe *how* to use this plugin."""
@@ -150,41 +145,6 @@ class QtAssistant(callbacks.Plugin):
         irc.replies(result)
 
     src = wrap(src, [additional('text')])
-
-    def lunch(self, irc, msg, args, query):
-        """ <day>
-
-        Eurest BI (Oslo) lunch menu for the given day.
-        """
-
-        url = 'http://bi.delimeeting.imaker.no/menyer/kantinemeny/d6/'
-        soup = bs4.BeautifulSoup(urllib2.urlopen(url).read())
-
-        # <table class="iTable ukesmeny">
-        #   <thead>
-        #     <tr><th>Mandag / Monday</th></tr>
-        #     ...
-        #   </thead>
-        #   <tbody>
-        #     <tr><td><p>Fish and chips</p></td></tr>
-        #     ...
-        #   </tbody>
-        # </table>
-
-        table = soup.find('table', attrs={'class': 'iTable ukesmeny'})
-        keys = [th.string for th in table.find_all('th')]
-        values = []
-        for td in table.find_all('td'):
-            values.append(', '.join([p.string for p in td.find_all('p')]))
-        values = dict(zip(keys, values))
-
-        day = query or calendar.day_name[datetime.datetime.today().weekday()]
-        for match in [key for key in keys for word in key.split() if len(word) > 1 and word.lower().startswith(day.lower())]:
-            if values[match]:
-                return irc.reply('%s: %s - %s' % (match.encode('utf-8'), values[match].encode('utf-8'), url))
-        irc.reply(url)
-
-    lunch = wrap(lunch, [additional('text')])
 
 Class = QtAssistant
 
